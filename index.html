@@ -1,0 +1,1470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ranger &amp; Roost: The Workshop Bites Back</title>
+  <style>
+    :root {
+      --bg-obsidian: #0c0a09;
+      --bg-charcoal: #1c1917;
+      --bg-card: #24201d;
+      --bg-elevated: #2e2925;
+      --fleece: #fafaf9;
+      --cream: #fafaf9;
+      --bone: #e8dfc9;
+      --muted: #a8a29e;
+      --amber: #f59e0b;
+      --gold: #d69a42;
+      --crimson: #c51f30;
+      --border: rgba(232, 223, 201, 0.16);
+      --radius: 12px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-obsidian);
+      color: var(--bone);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      line-height: 1.55;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* TOP NAVIGATION */
+    header {
+      background-color: rgba(28, 25, 23, 0.96);
+      border-bottom: 2px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      padding: 0.7rem 1.5rem;
+      min-height: 68px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: nowrap;
+      gap: 1.25rem;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      cursor: pointer;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .brand-logo {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--crimson);
+      box-shadow: 0 4px 12px rgba(197, 31, 48, 0.45);
+      background-color: var(--bg-elevated);
+      flex-shrink: 0;
+    }
+
+    .brand-title-stack {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 0.14rem;
+      line-height: 1.15;
+    }
+
+    .brand-main {
+      font-weight: 800;
+      font-size: 1rem;
+      letter-spacing: 0.04em;
+      color: var(--amber);
+    }
+
+    .brand-sub {
+      font-weight: 600;
+      font-size: 0.76rem;
+      letter-spacing: 0.03em;
+      color: var(--bone);
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      flex-wrap: nowrap;
+      min-width: 0;
+    }
+
+    .nav-links {
+      display: flex;
+      flex-wrap: nowrap;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    .nav-btn {
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid transparent;
+      padding: 0.42rem 0.68rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.85rem;
+      white-space: nowrap;
+      transition: all 0.2s ease;
+    }
+
+    .nav-btn:hover {
+      color: var(--cream);
+      background: var(--bg-card);
+    }
+
+    .nav-btn.active {
+      background: var(--amber);
+      color: var(--bg-charcoal);
+    }
+
+    .crate-pill {
+      background: var(--crimson);
+      color: var(--cream);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      padding: 0.42rem 0.85rem;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 0.84rem;
+      white-space: nowrap;
+      flex-shrink: 0;
+      cursor: pointer;
+    }
+
+    .hamburger-btn {
+      display: none;
+      background: var(--bg-elevated);
+      color: var(--cream);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.38rem 0.68rem;
+      font-size: 1.15rem;
+      line-height: 1;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .hamburger-btn:hover {
+      border-color: var(--amber);
+      color: var(--amber);
+    }
+
+    @media (max-width: 1120px) {
+      .hamburger-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .nav-links {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.35rem;
+        padding: 0.85rem 1.5rem 1.1rem;
+        background: var(--bg-charcoal);
+        border-bottom: 2px solid var(--border);
+        box-shadow: 0 16px 32px rgba(0, 0, 0, 0.65);
+        z-index: 99;
+      }
+
+      .nav-links.open {
+        display: flex;
+      }
+
+      .nav-btn {
+        text-align: left;
+        padding: 0.65rem 0.85rem;
+        font-size: 0.95rem;
+      }
+    }
+
+    /* MAIN LAYOUT */
+    main {
+      width: 100%;
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem 4rem;
+      flex: 1;
+    }
+
+    .section {
+      display: none;
+      animation: fadeIn 0.25s ease;
+    }
+
+    .section.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* HERO */
+    .hero {
+      background: var(--bg-charcoal);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.65);
+    }
+
+    .hero-banner-wrap {
+      width: 100%;
+      max-height: 440px;
+      overflow: hidden;
+      background: #090909;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .hero-banner-img {
+      width: 100%;
+      height: 100%;
+      max-height: 440px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .hero-content {
+      padding: 2rem;
+    }
+
+    .hero-tag {
+      display: inline-block;
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--amber);
+      margin-bottom: 0.5rem;
+    }
+
+    h2 {
+      font-size: 2rem;
+      color: var(--fleece);
+      margin-bottom: 0.65rem;
+      line-height: 1.2;
+    }
+
+    h3 {
+      font-size: 1.25rem;
+      color: var(--fleece);
+      margin-bottom: 0.5rem;
+    }
+
+    p {
+      color: var(--muted);
+      font-size: 0.96rem;
+    }
+
+    .social-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.85rem;
+      margin-top: 1.5rem;
+    }
+
+    /* BUTTONS */
+    button {
+      font-family: inherit;
+    }
+
+    .btn-primary {
+      background: var(--amber);
+      color: var(--bg-obsidian);
+      border: 1px solid var(--amber);
+      padding: 0.65rem 1.2rem;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: transform 0.12s ease, filter 0.15s ease;
+    }
+
+    .btn-primary:hover {
+      filter: brightness(1.08);
+    }
+
+    .btn-secondary {
+      background: var(--bg-elevated);
+      color: var(--fleece);
+      border: 1px solid var(--border);
+      padding: 0.65rem 1.2rem;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: border-color 0.15s ease;
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--amber);
+    }
+
+    .btn-crimson {
+      background: var(--crimson);
+      color: var(--fleece);
+      border: 1px solid var(--crimson);
+      padding: 0.65rem 1.2rem;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+
+    /* GRIDS & CARDS */
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .card {
+      background: var(--bg-charcoal);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.4rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .card-img {
+      width: 100%;
+      height: 240px;
+      object-fit: cover;
+      border-radius: 8px;
+      background: #141210;
+      margin-bottom: 1rem;
+      border: 1px solid var(--border);
+    }
+
+    .card-img.contain {
+      object-fit: contain;
+      padding: 0.5rem;
+    }
+
+    .subtitle {
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--gold);
+      margin-bottom: 0.35rem;
+    }
+
+    .phase-badge {
+      display: inline-block;
+      align-self: flex-start;
+      background: rgba(245, 158, 11, 0.14);
+      border: 1px solid rgba(245, 158, 11, 0.35);
+      color: var(--amber);
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 0.3rem 0.65rem;
+      border-radius: 6px;
+    }
+
+    .phase-badge.roost-badge {
+      background: rgba(197, 31, 48, 0.16);
+      border-color: rgba(197, 31, 48, 0.4);
+      color: #fca5a5;
+    }
+
+    .section-intro {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 1rem;
+      margin-bottom: 1.75rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* COMPANION STATS */
+    .stat-group {
+      margin-top: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+    }
+
+    .stat-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      color: var(--bone);
+      margin-bottom: 0.25rem;
+    }
+
+    .stat-track {
+      width: 100%;
+      height: 7px;
+      background: #0c0a09;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .stat-fill {
+      height: 100%;
+      background: var(--amber);
+      border-radius: 999px;
+    }
+
+    .stat-fill.crimson {
+      background: var(--crimson);
+    }
+
+    /* FACTIONS */
+    .faction-card {
+      background: var(--bg-charcoal);
+      border: 2px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.75rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 1.25rem;
+    }
+
+    .faction-card.ranger-side.selected {
+      border-color: var(--amber);
+    }
+
+    .faction-card.roost-side.selected {
+      border-color: var(--crimson);
+    }
+
+    .roost-title {
+      color: #fca5a5;
+    }
+
+    .perk-list {
+      margin-top: 1rem;
+      padding-left: 1.2rem;
+      color: var(--bone);
+      font-size: 0.9rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    /* SHOP & STOREFRONT */
+    .store-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .filter-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .filter-chip {
+      background: var(--bg-card);
+      color: var(--bone);
+      border: 1px solid var(--border);
+      padding: 0.45rem 0.9rem;
+      border-radius: 999px;
+      font-size: 0.84rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .filter-chip.active {
+      background: var(--amber);
+      color: var(--bg-obsidian);
+      border-color: var(--amber);
+    }
+
+    .product-card {
+      background: var(--bg-charcoal);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .product-img-wrap {
+      position: relative;
+      height: 220px;
+      background: #141210;
+    }
+
+    .product-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .faction-tag {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: rgba(12, 10, 9, 0.88);
+      color: var(--amber);
+      border: 1px solid var(--amber);
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 0.25rem 0.55rem;
+      border-radius: 5px;
+    }
+
+    .faction-tag.roost {
+      color: #fca5a5;
+      border-color: var(--crimson);
+    }
+
+    .product-body {
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+      flex: 1;
+    }
+
+    .product-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .product-price {
+      font-weight: 800;
+      color: var(--amber);
+      font-size: 1.05rem;
+    }
+
+    .size-select {
+      background: var(--bg-obsidian);
+      color: var(--fleece);
+      border: 1px solid var(--border);
+      padding: 0.5rem;
+      border-radius: 6px;
+      font-size: 0.88rem;
+      margin-top: auto;
+    }
+
+    .faction-highlight-ranger { color: var(--amber); }
+    .faction-highlight-roost { color: #fca5a5; }
+
+    /* STUDIO SCRIPT VAULT */
+    .studio-header-card {
+      margin-bottom: 1.5rem;
+    }
+
+    .script-selector-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.75rem;
+    }
+
+    .beat-box {
+      background: var(--bg-obsidian);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--amber);
+      padding: 0.85rem 1rem;
+      border-radius: 6px;
+      margin-top: 0.65rem;
+    }
+
+    /* SLIDE-OUT CART DRAWER */
+    .cart-drawer {
+      position: fixed;
+      top: 0;
+      right: -400px;
+      width: 100%;
+      max-width: 380px;
+      height: 100vh;
+      background: var(--bg-charcoal);
+      border-left: 1px solid var(--border);
+      z-index: 120;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: right 0.25s ease;
+      box-shadow: -20px 0 50px rgba(0, 0, 0, 0.8);
+    }
+
+    .cart-drawer.open {
+      right: 0;
+    }
+
+    .cart-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .cart-items {
+      margin-top: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      max-height: 60vh;
+      overflow-y: auto;
+    }
+
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.75rem;
+      background: var(--bg-obsidian);
+      padding: 0.75rem;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+    }
+
+    .cart-item-title {
+      font-weight: 700;
+      color: var(--fleece);
+      font-size: 0.9rem;
+    }
+
+    .cart-item-meta {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .cart-footer {
+      border-top: 1px solid var(--border);
+      padding-top: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+    }
+
+    .cart-total-row {
+      display: flex;
+      justify-content: space-between;
+      font-weight: 700;
+      color: var(--fleece);
+    }
+
+    .cart-total-amount {
+      color: var(--amber);
+    }
+
+    footer {
+      border-top: 1px solid var(--border);
+      text-align: center;
+      padding: 1.25rem;
+      font-size: 0.82rem;
+      color: var(--muted);
+      background: var(--bg-charcoal);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand" onclick="navigateTo('home')">
+      <img
+        src="assets/images/logoV1.jpg"
+        alt="wolfXvXsabyter Ranger and Roost Logo"
+        class="brand-logo"
+      />
+      <span class="brand-title-stack">
+        <span class="brand-main">RANGER &amp; ROOST</span>
+        <span class="brand-sub">The Workshop Bites Back</span>
+      </span>
+    </div>
+
+    <div class="header-right">
+      <nav class="nav-links" id="nav-links" aria-label="Primary Navigation">
+        <button type="button" class="nav-btn active" data-section="home" onclick="navigateTo('home')">Home</button>
+        <button type="button" class="nav-btn" data-section="episodes" onclick="navigateTo('episodes')">Episodes</button>
+        <button type="button" class="nav-btn" data-section="characters" onclick="navigateTo('characters')">Characters</button>
+        <button type="button" class="nav-btn" data-section="companions" onclick="navigateTo('companions')">Companions</button>
+        <button type="button" class="nav-btn" data-section="faction" onclick="navigateTo('faction')">Choose Side</button>
+        <button type="button" class="nav-btn" data-section="shop" onclick="navigateTo('shop')">Shop</button>
+        <button type="button" class="nav-btn" data-section="studio" onclick="navigateTo('studio')">Creator Studio</button>
+        <button type="button" class="nav-btn" data-section="lore" onclick="navigateTo('lore')">Story Arc</button>
+      </nav>
+
+      <button type="button" class="crate-pill" onclick="toggleCart(true)">
+        Crate (<span id="cart-count">0</span>)
+      </button>
+
+      <button
+        type="button"
+        class="hamburger-btn"
+        id="hamburger-btn"
+        aria-label="Toggle Navigation Menu"
+        aria-expanded="false"
+        aria-controls="nav-links"
+        onclick="toggleMobileMenu()"
+      >
+        &#9776;
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <!-- HOME SECTION -->
+    <section id="home" class="hero section active">
+      <div class="hero-banner-wrap">
+        <img
+          src="assets/images/banner.png"
+          alt="Ranger &amp; Roost Claymation Series Banner"
+          class="hero-banner-img"
+        />
+      </div>
+      <div class="hero-content">
+        <span class="hero-tag">
+          The Workshop Bites Back &bull; Claymation Slapstick Series
+        </span>
+        <h2>Two Frauds. One Desk. Zero Clues.</h2>
+        <p>
+          A sheep in wolf's clothing with anger issues and a wolf in sheep's
+          clothing trying to play innocent. Neither knows the other is faking it.
+        </p>
+        <div class="social-links">
+          <button type="button" class="btn-primary" onclick="navigateTo('faction')">
+            Choose Your Side
+          </button>
+          <button type="button" class="btn-secondary" onclick="navigateTo('shop')">
+            Explore Workshop Merch
+          </button>
+          <button type="button" class="btn-secondary" onclick="navigateTo('episodes')">
+            Watch Episodes
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- EPISODES SECTION -->
+    <section id="episodes" class="section">
+      <div class="section-intro">
+        <div>
+          <span class="hero-tag">Season 1 &bull; Desktop Slapstick</span>
+          <h2>Workshop Episodes</h2>
+          <p>Tap any episode to open its 4-beat script and AI claymation prompt.</p>
+        </div>
+      </div>
+      <div class="grid-3" id="episode-grid"></div>
+    </section>
+
+    <!-- CHARACTERS SECTION -->
+    <section id="characters" class="section">
+      <div class="grid-3">
+        <div class="card">
+          <div>
+            <img
+              src="assets/images/ranger-front.png"
+              alt="Ranger front view"
+              class="card-img contain"
+            />
+            <div class="subtitle">The Sheep in Wolf's Clothing</div>
+            <h3>Ranger</h3>
+            <p>
+              Compact, deadpan, and aggressively grumpy. Ranger wears a heavy wolf
+              pelt hood and oversized leather boots to intimidate the forest—constantly
+              tripping over his own feet and trying to hide his squeaky bleats.
+            </p>
+          </div>
+          <span class="phase-badge">Signature Prop: Leather Boots</span>
+        </div>
+
+        <div class="card">
+          <div>
+            <img
+              src="assets/images/roost-front.png"
+              alt="Roost front view"
+              class="card-img contain"
+            />
+            <div class="subtitle">The Wolf in Sheep's Clothing</div>
+            <h3>Roost</h3>
+            <p>
+              Tall, scrappy, and convinced he is a master predator. Roost squeezes
+              into a fluffy cream sheep costume to lure prey, endlessly overheating
+              and trying to hide his sharp fangs behind an innocent expression.
+            </p>
+          </div>
+          <span class="phase-badge">Signature Prop: Red Wax Scroll</span>
+        </div>
+
+        <div class="card">
+          <div>
+            <img
+              src="assets/images/creatoravatar-front.png"
+              alt="wolfXvXsabyter Claymation Avatar front view"
+              class="card-img contain"
+            />
+            <div class="subtitle">The Sculptor &amp; Creator</div>
+            <h3>wolfXvXsabyter</h3>
+            <p>
+              The mastermind behind the workshop desk. Armed with wooden sculpting
+              tools and clay, shaping the endless rivalry between Ranger and Roost
+              one frame at a time.
+            </p>
+          </div>
+          <span class="phase-badge">Signature Prop: Clay Sculpting Tools</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- COMPANIONS SECTION -->
+    <section id="companions" class="section">
+      <div class="section-intro">
+        <div>
+          <span class="hero-tag">Workshop Sidekicks</span>
+          <h2>Desk Companions</h2>
+          <p>
+            The pint-sized clay creatures who witness every botched ambush, tripped
+            bootlace, and crooked wax seal from the edge of the cutting mat.
+          </p>
+        </div>
+        <button type="button" class="btn-secondary" onclick="navigateTo('faction')">
+          Align With a Faction &rarr;
+        </button>
+      </div>
+
+      <div class="grid-3">
+        <div class="card">
+          <div>
+            <img
+              src="assets/images/pip-front.png"
+              alt="Pip the Thimble Owl front view"
+              class="card-img contain"
+            />
+            <div class="subtitle">Ranger's Lookout &bull; Thimble Owl</div>
+            <h3>Pip</h3>
+            <p>
+              Perched inside a tarnished brass sewing thimble, Pip hoots an alarm
+              whenever Roost sneaks past the inkwell—though he usually falls
+              asleep mid-watch.
+            </p>
+            <div class="stat-group">
+              <div class="stat-row">
+                <div class="stat-label"><span>Alertness</span><span>35%</span></div>
+                <div class="stat-track"><div class="stat-fill" style="width: 35%"></div></div>
+              </div>
+              <div class="stat-row">
+                <div class="stat-label"><span>Loyalty to Ranger</span><span>95%</span></div>
+                <div class="stat-track"><div class="stat-fill" style="width: 95%"></div></div>
+              </div>
+            </div>
+          </div>
+          <span class="phase-badge">Relic: Brass Thimble</span>
+        </div>
+
+        <div class="card">
+          <div>
+            <img
+              src="assets/images/nib-front.png"
+              alt="Nib the Wax-Seal Fox front view"
+              class="card-img contain"
+            />
+            <div class="subtitle">Roost's Accomplice &bull; Inkwell Fox</div>
+            <h3>Nib</h3>
+            <p>
+              A pocket-sized clay fox with crimson wax dipped on his tail tip. He
+              forged half of Roost's fake "Sheep Guild" credentials and hoards
+              stolen paperclips.
+            </p>
+            <div class="stat-group">
+              <div class="stat-row">
+                <div class="stat-label"><span>Forgery Skill</span><span>92%</span></div>
+                <div class="stat-track"><div class="stat-fill crimson" style="width: 92%"></div></div>
+              </div>
+              <div class="stat-row">
+                <div class="stat-label"><span>Stealth</span><span>84%</span></div>
+                <div class="stat-track"><div class="stat-fill crimson" style="width: 84%"></div></div>
+              </div>
+            </div>
+          </div>
+          <span class="phase-badge">Relic: Crimson Stamp</span>
+        </div>
+
+        <div class="card">
+          <div>
+            <img
+              src="assets/images/clod-front.png"
+              alt="Clod the Scrap-Clay Pug front view"
+              class="card-img contain"
+            />
+            <div class="subtitle">Neutral Arbiter &bull; Scrap-Clay Pug</div>
+            <h3>Clod</h3>
+            <p>
+              Rolled together from leftover terracotta and charcoal clay shavings.
+              Clod sits on the warm lantern base and judges both frauds with
+              unblinking button eyes.
+            </p>
+            <div class="stat-group">
+              <div class="stat-row">
+                <div class="stat-label"><span>Stubbornness</span><span>100%</span></div>
+                <div class="stat-track"><div class="stat-fill" style="width: 100%"></div></div>
+              </div>
+              <div class="stat-row">
+                <div class="stat-label"><span>Lantern Hogging</span><span>98%</span></div>
+                <div class="stat-track"><div class="stat-fill crimson" style="width: 98%"></div></div>
+              </div>
+            </div>
+          </div>
+          <span class="phase-badge">Relic: Wooden Sculpting Rib</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- CHOOSE YOUR SIDE SECTION -->
+    <section id="faction" class="section">
+      <div class="section-intro">
+        <div>
+          <span class="hero-tag">Declare Your Allegiance</span>
+          <h2>Choose Your Side</h2>
+          <p>
+            Pick a disguise before entering the workshop store. Your chosen banner
+            unlocks custom faction apparel, collector bundles, and filters the
+            merch vault automatically.
+          </p>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="faction-card ranger-side" id="card-team-ranger">
+          <div>
+            <span class="phase-badge">Faction I &bull; Heavy Pelt &amp; Boots</span>
+            <h3>Team Ranger (The Grumpy Sheep)</h3>
+            <p>
+              For fans of deadpan glares, oversized leather boots, and pretending
+              you are the apex predator of the desk.
+            </p>
+            <ul class="perk-list">
+              <li>Unlocks Heavy Charcoal &amp; Amber Apparel Drops</li>
+              <li>Includes Pip the Thimble Owl Sticker Pack with orders</li>
+              <li>15% Faction Bundle Code: <strong>BLEATWOLF15</strong></li>
+            </ul>
+          </div>
+          <button type="button" class="btn-primary" onclick="selectFaction('ranger')">
+            Pledge to Team Ranger &amp; Shop Gear &rarr;
+          </button>
+        </div>
+
+        <div class="faction-card roost-side" id="card-team-roost">
+          <div>
+            <span class="phase-badge roost-badge">Faction II &bull; Fleece &amp; Red Wax</span>
+            <h3 class="roost-title">Team Roost (The Scrappy Wolf)</h3>
+            <p>
+              For masterminds squeezed into wool sweaters who insist their fangs
+              are just "really pointy molars."
+            </p>
+            <ul class="perk-list">
+              <li>Unlocks Cream Fleece &amp; Crimson Seal Apparel Drops</li>
+              <li>Includes Nib the Inkwell Fox Wax Seal Bookmark</li>
+              <li>15% Faction Bundle Code: <strong>FLUFFYFANG15</strong></li>
+            </ul>
+          </div>
+          <button type="button" class="btn-crimson" onclick="selectFaction('roost')">
+            Pledge to Team Roost &amp; Shop Gear &rarr;
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- CUSTOM E-COMMERCE SECTION -->
+    <section id="shop" class="section">
+      <div class="section-intro">
+        <div>
+          <span class="hero-tag">Official wolfXvXsabyter Outfitters</span>
+          <h2>Workshop Apparel &amp; Gifts</h2>
+          <p id="shop-faction-banner">
+            Showing all official claymation series apparel and desk collectibles.
+          </p>
+        </div>
+        <button type="button" class="btn-secondary" onclick="navigateTo('faction')">
+          Switch Faction
+        </button>
+      </div>
+
+      <div class="store-toolbar">
+        <div class="filter-group" id="shop-filters">
+          <button type="button" class="filter-chip active" data-filter="all" onclick="filterProducts('all')">All Drops</button>
+          <button type="button" class="filter-chip" data-filter="ranger" onclick="filterProducts('ranger')">Team Ranger</button>
+          <button type="button" class="filter-chip" data-filter="roost" onclick="filterProducts('roost')">Team Roost</button>
+          <button type="button" class="filter-chip" data-filter="gifts" onclick="filterProducts('gifts')">Desk Gifts &amp; Collectibles</button>
+        </div>
+        <button type="button" class="btn-primary" onclick="toggleCart(true)">
+          View Workshop Crate (<span id="toolbar-cart-count">0</span>)
+        </button>
+      </div>
+
+      <div class="grid-3" id="product-grid"></div>
+    </section>
+
+    <!-- CREATOR STUDIO SECTION -->
+    <section id="studio" class="section">
+      <div class="card studio-header-card">
+        <h3>Interactive Production Script &amp; AI Prompt Vault</h3>
+        <p>
+          Select an episode below to view the 4-beat viral structure, Foley audio
+          cues, and copy-paste AI claymation prompts.
+        </p>
+        <div class="script-selector-bar" id="script-selector"></div>
+      </div>
+      <div id="script-viewer" class="card"></div>
+    </section>
+
+    <!-- STORY ARC SECTION -->
+    <section id="lore" class="section">
+      <div class="grid-3">
+        <div class="card">
+          <div>
+            <span class="phase-badge">Phase 1 &bull; Episodes 1–10</span>
+            <h3>The Turf War</h3>
+            <div class="subtitle">Lantern Rights</div>
+            <p>
+              Pure slapstick rivalry. Ranger and Roost battle over the warm spot
+              by the glowing lantern, stacks of leather-bound books, and mysterious
+              paw-sealed scrolls on the workshop desk.
+            </p>
+          </div>
+        </div>
+
+        <div class="card">
+          <div>
+            <span class="phase-badge">Phase 2 &bull; Episodes 11–20</span>
+            <h3>The Forced Truce</h3>
+            <div class="subtitle">The Workshop Hunts Back</div>
+            <p>
+              A real threat enters the workshop. Ranger and Roost must form an
+              uneasy alliance, desperately defending each other's terrible
+              disguises without blowing their own cover.
+            </p>
+          </div>
+        </div>
+
+        <div class="card">
+          <div>
+            <span class="phase-badge">Phase 3 &bull; Season Finale</span>
+            <h3>The Big Reveal</h3>
+            <div class="subtitle">Hunt Season</div>
+            <p>
+              A massive desk catastrophe strips away both costumes at once. Shocked
+              by the truth, they realize they prefer their fake personas, put the
+              disguises back on, and resume the chase.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- SLIDE-OUT SHOPPING CRATE DRAWER -->
+  <aside class="cart-drawer" id="cart-drawer">
+    <div>
+      <div class="cart-header">
+        <h3 class="cart-title">Workshop Crate</h3>
+        <button type="button" class="btn-secondary cart-close-btn" onclick="toggleCart(false)">&times;</button>
+      </div>
+      <div class="cart-items" id="cart-items-list">
+        <p class="cart-empty">Your crate is currently empty.</p>
+      </div>
+    </div>
+
+    <div class="cart-footer">
+      <div class="cart-total-row">
+        <span>Estimated Total</span>
+        <span class="cart-total-amount" id="cart-total">$0.00</span>
+      </div>
+      <button type="button" class="btn-primary cart-checkout-btn" onclick="checkoutCrate()">
+        Proceed to Workshop Checkout
+      </button>
+    </div>
+  </aside>
+
+  <footer>
+    &copy; 2026 wolfXvXsabyter &bull; Ranger &amp; Roost Claymation Universe.
+    Built for TikTok &amp; YouTube Shorts.
+  </footer>
+
+  <script>
+    const EPISODES = [
+      {
+        id: "ep01",
+        number: "Episode 01",
+        duration: "0:40",
+        status: "Frame Ready",
+        title: "The Wax Seal",
+        img: "assets/images/ep01-scroll.png",
+        summary: "Roost tries to steal a paw-sealed scroll from the desk, triggering a heavy-booted confrontation with Ranger.",
+        beats: [
+          "Beat 1 (Hook): Sculptor steps away; Roost eyes the crimson wax seal by the glowing lantern.",
+          "Beat 2 (Escalation): Ranger stomps into frame, boots squeaking, trying to growl while holding back a bleat.",
+          "Beat 3 (Climax): Tug-of-war over the parchment snaps the ribbon and launches Roost into the brass thimble.",
+          "Beat 4 (Button): Clod the scrap-clay pug blinks once beside the lantern."
+        ],
+        prompt: "Stop-motion claymation macro shot, dark charcoal workshop desk, warm lantern glow, scrappy wolf in fluffy cream sheep suit reaching for a red wax-sealed scroll while grumpy sheep in wolf pelt hood glares from behind."
+      },
+      {
+        id: "ep02",
+        number: "Episode 02",
+        duration: "0:38",
+        status: "Frame Ready",
+        title: "Shear Terror",
+        img: "assets/images/ep02-end.png",
+        summary: "Ranger discovers giant iron tailor shears on the cutting mat and decides Roost's wool looks a little too real.",
+        beats: [
+          "Beat 1 (Hook): Ranger drags heavy iron shears across the cutting mat with a metallic scrape.",
+          "Beat 2 (Escalation): Roost panics—if his fleece gets trimmed, his wolf fur will show.",
+          "Beat 3 (Climax): Roost dives behind the inkwell while Nib fires paperclips as cover.",
+          "Beat 4 (Button): Ranger trips over his own bootlaces and snips a stray thread off his own wolf hood."
+        ],
+        prompt: "Stop-motion claymation macro shot, grumpy sheep wearing wolf-pelt hood holding oversized antique iron tailor shears on a dark workshop desk, warm amber lantern light, dramatic shadows."
+      },
+      {
+        id: "ep03",
+        number: "Episode 03",
+        duration: "0:45",
+        status: "In Production",
+        title: "Lantern Rights",
+        img: "assets/images/banner.png",
+        summary: "A chilly draft hits the desk, sparking an all-out turf war over the warm spot next to the antique lantern.",
+        beats: [
+          "Beat 1 (Hook): Frost gathers on the workshop window; the lantern casts a golden circle on the mat.",
+          "Beat 2 (Escalation): Roost overheats in his thick sheep suit while Ranger shivers in his drafty pelt.",
+          "Beat 3 (Climax): Both build clay barricades out of sculpting ribs and erasers.",
+          "Beat 4 (Button): Clod curls up directly on the lantern base, claiming the entire heat source."
+        ],
+        prompt: "Stop-motion claymation wide macro shot, Ranger and Roost facing off beside a glowing antique brass lantern on a dark charcoal desk, tactile clay textures, moody chiaroscuro lighting."
+      }
+    ];
+
+    const MERCH_CATALOG = [
+      {
+        id: "ranger-hoodie",
+        title: "Wolf Pelt Heavyweight Hoodie",
+        faction: "ranger",
+        category: "Apparel",
+        price: 64.0,
+        img: "assets/images/merch-ranger-hoodie.png",
+        desc: "450gsm charcoal fleece with embroidered wolf-ear hood seam and amber crest.",
+        options: ["S", "M", "L", "XL", "2XL"]
+      },
+      {
+        id: "roost-tee",
+        title: "Innocent Fleece Boxy Tee",
+        faction: "roost",
+        category: "Apparel",
+        price: 36.0,
+        img: "assets/images/merch-roost-tee.png",
+        desc: "Vintage cream heavyweight cotton tee featuring Roost & the crimson wax scroll.",
+        options: ["S", "M", "L", "XL", "2XL"]
+      },
+      {
+        id: "desk-gift-set",
+        title: "Two Frauds Desk Vinyl & Mug Set",
+        faction: "gifts",
+        category: "Gift Bundle",
+        price: 48.0,
+        img: "assets/images/merch-gift-set.png",
+        desc: "Hand-sculpted clay-finish mini figures + stoneware lantern mug in collector box.",
+        options: ["Standard Box", "Signed Wax-Seal Edition"]
+      },
+      {
+        id: "ranger-boots-socks",
+        title: "Oversized Leather-Trim Crew Socks",
+        faction: "ranger",
+        category: "Apparel",
+        price: 18.0,
+        img: "assets/images/merch-ranger-hoodie.png",
+        desc: "Cushioned amber & charcoal jacquard knit socks inspired by Ranger's boots.",
+        options: ["One Size (US 7–12)"]
+      },
+      {
+        id: "roost-wax-mug",
+        title: "Red Wax Seal Campfire Mug",
+        faction: "roost",
+        category: "Gifts",
+        price: 22.0,
+        img: "assets/images/merch-gift-set.png",
+        desc: "Speckled cream ceramic mug stamped with an embossed crimson wolf-paw seal.",
+        options: ["12 oz", "16 oz"]
+      },
+      {
+        id: "companion-pin-pack",
+        title: "Pip, Nib & Clod Enamel Pin Trio",
+        faction: "gifts",
+        category: "Gifts",
+        price: 24.0,
+        img: "assets/images/merch-roost-tee.png",
+        desc: "Hard enamel antique-brass pins of all three workshop companions.",
+        options: ["3-Pin Collector Card"]
+      }
+    ];
+
+    let activeFaction = null;
+    let cart = [];
+
+    function toggleMobileMenu(forceState) {
+      const nav = document.getElementById("nav-links");
+      const btn = document.getElementById("hamburger-btn");
+      if (!nav || !btn) return;
+
+      const isOpen =
+        typeof forceState === "boolean" ? forceState : !nav.classList.contains("open");
+
+      nav.classList.toggle("open", isOpen);
+      btn.setAttribute("aria-expanded", String(isOpen));
+    }
+
+    function navigateTo(sectionId) {
+      document.querySelectorAll(".section").forEach((sec) => {
+        sec.classList.toggle("active", sec.id === sectionId);
+      });
+      document.querySelectorAll(".nav-btn").forEach((btn) => {
+        btn.classList.toggle("active", btn.dataset.section === sectionId);
+      });
+      toggleMobileMenu(false);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function renderEpisodes() {
+      const grid = document.getElementById("episode-grid");
+      if (!grid) return;
+
+      grid.innerHTML = EPISODES.map(
+        (ep) => `
+          <div class="card">
+            <div>
+              <img
+                src="${ep.img}"
+                alt="${ep.title}"
+                class="card-img"
+                onerror="this.src='assets/images/banner.png'"
+              />
+              <div class="subtitle">${ep.number} &bull; ${ep.duration} &bull; ${ep.status}</div>
+              <h3>${ep.title}</h3>
+              <p>${ep.summary}</p>
+            </div>
+            <button type="button" class="btn-secondary" onclick="openEpisodeScript('${ep.id}')">
+              Open Script &amp; Prompts
+            </button>
+          </div>
+        `
+      ).join("");
+    }
+
+    function renderStudioSelector() {
+      const bar = document.getElementById("script-selector");
+      if (!bar) return;
+
+      bar.innerHTML = EPISODES.map(
+        (ep) => `
+          <button type="button" class="filter-chip" onclick="openEpisodeScript('${ep.id}')">
+            ${ep.number}: ${ep.title}
+          </button>
+        `
+      ).join("");
+
+      openEpisodeScript(EPISODES[0].id);
+    }
+
+    function openEpisodeScript(epId) {
+      const ep = EPISODES.find((item) => item.id === epId) || EPISODES[0];
+      navigateTo("studio");
+
+      const viewer = document.getElementById("script-viewer");
+      if (!viewer) return;
+
+      viewer.innerHTML = `
+        <div>
+          <span class="phase-badge">${ep.number} &bull; ${ep.duration}</span>
+          <h3 style="margin-top:0.65rem;">${ep.title}</h3>
+          <p>${ep.summary}</p>
+          ${ep.beats.map((b) => `<div class="beat-box">${b}</div>`).join("")}
+          <div class="beat-box" style="border-left-color: var(--crimson); margin-top: 1rem;">
+            <strong>AI Claymation Prompt:</strong><br />
+            <span style="color: var(--muted); font-size: 0.88rem;">${ep.prompt}</span>
+          </div>
+        </div>
+      `;
+    }
+
+    function selectFaction(faction) {
+      activeFaction = faction;
+      document.querySelectorAll(".faction-card").forEach((c) => c.classList.remove("selected"));
+      const chosenCard = document.getElementById(`card-team-${faction}`);
+      if (chosenCard) chosenCard.classList.add("selected");
+
+      const banner = document.getElementById("shop-faction-banner");
+      if (banner) {
+        banner.innerHTML =
+          faction === "ranger"
+            ? 'Active Allegiance: <strong class="faction-highlight-ranger">Team Ranger</strong> &bull; Code <strong>BLEATWOLF15</strong> ready at checkout.'
+            : 'Active Allegiance: <strong class="faction-highlight-roost">Team Roost</strong> &bull; Code <strong>FLUFFYFANG15</strong> ready at checkout.';
+      }
+
+      navigateTo("shop");
+      filterProducts(faction);
+    }
+
+    function filterProducts(filter) {
+      document.querySelectorAll(".filter-chip").forEach((chip) => {
+        chip.classList.toggle("active", chip.dataset.filter === filter);
+      });
+
+      const grid = document.getElementById("product-grid");
+      if (!grid) return;
+
+      const items =
+        filter === "all"
+          ? MERCH_CATALOG
+          : MERCH_CATALOG.filter((p) => p.faction === filter);
+
+      grid.innerHTML = items
+        .map((item) => {
+          const factionLabel =
+            item.faction === "ranger"
+              ? "Team Ranger"
+              : item.faction === "roost"
+              ? "Team Roost"
+              : "Workshop Gift";
+          const roostClass = item.faction === "roost" ? " roost" : "";
+          const optionMarkup = item.options
+            .map((opt) => `<option value="${opt}">${opt}</option>`)
+            .join("");
+
+          return `
+            <div class="product-card">
+              <div class="product-img-wrap">
+                <span class="faction-tag${roostClass}">${factionLabel}</span>
+                <img src="${item.img}" alt="${item.title}" class="product-img" onerror="this.src='assets/images/banner.png'" />
+              </div>
+              <div class="product-body">
+                <div class="product-meta">
+                  <span class="subtitle">${item.category}</span>
+                  <span class="product-price">$${item.price.toFixed(2)}</span>
+                </div>
+                <h3>${item.title}</h3>
+                <p>${item.desc}</p>
+                <select id="opt-${item.id}" class="size-select">${optionMarkup}</select>
+                <button type="button" class="btn-primary" onclick="addToCart('${item.id}')">
+                  Add to Crate
+                </button>
+              </div>
+            </div>
+          `;
+        })
+        .join("");
+    }
+
+    function addToCart(productId) {
+      const product = MERCH_CATALOG.find((item) => item.id === productId);
+      if (!product) return;
+      const optEl = document.getElementById(`opt-${productId}`);
+      const variant = optEl ? optEl.value : product.options[0];
+      cart.push({ ...product, variant });
+      updateCartUI();
+      toggleCart(true);
+    }
+
+    function removeFromCart(index) {
+      cart.splice(index, 1);
+      updateCartUI();
+    }
+
+    function updateCartUI() {
+      const cartCountEl = document.getElementById("cart-count");
+      const toolbarCountEl = document.getElementById("toolbar-cart-count");
+      const listEl = document.getElementById("cart-items-list");
+      const totalEl = document.getElementById("cart-total");
+
+      if (cartCountEl) cartCountEl.textContent = cart.length;
+      if (toolbarCountEl) toolbarCountEl.textContent = cart.length;
+      if (!listEl || !totalEl) return;
+
+      if (cart.length === 0) {
+        listEl.innerHTML = '<p class="cart-empty">Your crate is currently empty.</p>';
+        totalEl.textContent = "$0.00";
+        return;
+      }
+
+      let subtotal = 0;
+      listEl.innerHTML = cart
+        .map((item, idx) => {
+          subtotal += item.price;
+          return `
+            <div class="cart-item">
+              <div>
+                <div class="cart-item-title">${item.title}</div>
+                <div class="cart-item-meta">${item.variant} &bull; $${item.price.toFixed(2)}</div>
+              </div>
+              <button type="button" class="btn-secondary" onclick="removeFromCart(${idx})">
+                Remove
+              </button>
+            </div>
+          `;
+        })
+        .join("");
+
+      const finalTotal = activeFaction ? subtotal * 0.85 : subtotal;
+      totalEl.textContent = activeFaction
+        ? `$${finalTotal.toFixed(2)} (15% Faction Off)`
+        : `$${subtotal.toFixed(2)}`;
+    }
+
+    function toggleCart(open) {
+      const drawer = document.getElementById("cart-drawer");
+      if (drawer) drawer.classList.toggle("open", open);
+    }
+
+    function checkoutCrate() {
+      if (cart.length === 0) return;
+      const factionNote = activeFaction
+        ? ` (Faction: Team ${activeFaction.toUpperCase()})`
+        : "";
+      alert(`Order queued for the wolfXvXsabyter Workshop! Items: ${cart.length}${factionNote}`);
+      cart = [];
+      updateCartUI();
+      toggleCart(false);
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      renderEpisodes();
+      renderStudioSelector();
+      filterProducts("all");
+      navigateTo("home");
+    });
+  </script>
+</body>
+</html>
